@@ -8,6 +8,7 @@ import Toc from '@/components/toc'
 import ScrollToTop from '@/components/scrollToTop'
 import Accordion from '@/components/ui/accordion'
 import { format, parseISO } from 'date-fns'
+import Link from "next/link";
 
 export const generateStaticParams = async () => allExperiments.
     filter((experiment) => experiment.isPublished === true).
@@ -25,20 +26,20 @@ export function generateMetadata({ params }: ParamProps): Metadata | undefined {
     if (!experiment) {
         return;
     }
-    const { title, slug, description, publishedDate, tag } = experiment;
+    const { title, slug, description, publishedDate, tags } = experiment;
 
     return {
         title,
         description,
         publisher: 'dhirajp',
-        keywords: tag,
+        keywords: tags,
         openGraph: {
             title,
             description,
             url: `https://dhirajp.vercel.app${slug}`,
             type: 'article',
             publishedTime: publishedDate,
-            tags: tag,
+            tags: tags,
         },
         twitter: {
             card: 'summary_large_image',
@@ -66,9 +67,14 @@ function ExperimentDetails({ experiment }: { experiment: Experiment }) {
                             <Icon iconName='calendar' size='sm' />
                             <time>{format(parseISO(experiment.publishedDate), "LLLL d, yyyy")}</time>
                         </div>
-                        <span className='px-2.5 py-0.5 inline-flex items-center justify-center rounded-md text-xs font-medium bg-accent text-accent-foreground'>
-                            {experiment.tag}
-                        </span>
+                        <div className='flex gap-2'>
+                            {experiment.tags.map((tag, index) => (
+                                <Link href={`/lab?tag=${tag}`}
+                                    key={index} className="px-2.5 py-1 before:content-['#'] rounded-md text-xs font-medium bg-accent text-accent-foreground">
+                                    {tag}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
                 <Accordion content={<Toc />} value='table-of-contents'>

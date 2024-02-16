@@ -1,4 +1,4 @@
-import { Snippet } from "@/.contentlayer/generated";
+import { Experiment, Snippet } from "@/.contentlayer/generated";
 import Fuse from "fuse.js";
 
 type SnippetFilter = (snippet: Snippet) => boolean;
@@ -30,4 +30,25 @@ export function getFilteredSnippets(
 	const searchResults = fuse.search(searchQuery);
 
 	return searchResults.map((result) => result.item);
+}
+
+type ExperimentFilter = (experiment: Experiment) => boolean;
+
+export function getFilteredExperiments(
+	experiments: Experiment[],
+	tag: string
+): Experiment[] {
+	const filters: ExperimentFilter[] = [];
+
+	filters.push((experiment) => experiment.isPublished);
+
+	if (tag) {
+		filters.push((experiment) => experiment.tags.includes(tag));
+	}
+
+	const filteredExperiments = experiments.filter((experiment) =>
+		filters.every((filter) => filter(experiment))
+	);
+
+	return filteredExperiments;
 }

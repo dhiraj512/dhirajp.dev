@@ -1,12 +1,10 @@
-import { Snippet } from "@/.contentlayer/generated";
+import { Experiment, Snippet } from "@/.contentlayer/generated";
 
-export type SnippetTags = Snippet["tags"][number];
-
-export function getSnippetTags(snippets: Snippet[]) {
-	const tagSet = snippets.reduce((acc, snippet) => {
-		snippet.tags.forEach((tag) => acc.add(tag));
+export function getTags(contents: Snippet[] | Experiment[]) {
+	const tagSet = contents.reduce((acc, content) => {
+		content.tags.forEach((tag) => acc.add(tag));
 		return acc;
-	}, new Set<SnippetTags>());
+	}, new Set<string>());
 
 	return Array.from(tagSet);
 }

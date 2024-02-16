@@ -15,8 +15,12 @@ export const Experiment = defineDocumentType(() => ({
 		author: {
 			type: "string",
 		},
-		tag: {
-			type: "string",
+		tags: {
+			type: "list",
+			of: {
+				type: "string",
+			},
+			required: true,
 		},
 		thumbnail: {
 			type: "string",

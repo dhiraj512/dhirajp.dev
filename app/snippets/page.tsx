@@ -1,8 +1,8 @@
 import { allSnippets, Snippet } from '@/.contentlayer/generated'
 import Search from '@/components/search'
 import Tags from '@/components/tags'
-import { getFilteredSnippets } from '@/lib/getFilteredSnippets'
-import { getSnippetTags } from '@/lib/getTags'
+import { getFilteredSnippets } from '@/lib/getFilteredPosts'
+import { getTags } from '@/lib/getTags'
 import { sortByDate } from '@/lib/utils'
 import Link from 'next/link'
 import Card from '@/components/ui/card'
@@ -26,7 +26,7 @@ export default function SnippetsPage({ searchParams }: Props) {
     const searchQuery = searchParams.search ?? ""
     const filteredTag = searchParams.tag ?? ""
     const filteredSnippets = getFilteredSnippets(sortByDate(allSnippets), searchQuery, filteredTag);
-    const tags = getSnippetTags(allSnippets);
+    const tags = getTags(allSnippets);
 
     return (
         <div className='relative my-6 mx-4 flex flex-col gap-6'>
