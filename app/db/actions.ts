@@ -1,14 +1,14 @@
 "use server";
 
 import { sql } from "./postgres";
-import { unstable_noStore as noStore } from "next/cache";
+// import { unstable_noStore as noStore } from "next/cache";
 
 export async function getBlogViews() {
 	if (!process.env.POSTGRES_URL) {
 		return [];
 	}
 
-	noStore();
+	// noStore();
 	let views = await sql`
     SELECT count
     FROM views
@@ -24,7 +24,7 @@ export async function getViewsCount(): Promise<
 		return [];
 	}
 
-	noStore();
+	// noStore();
 	return sql`
     SELECT slug, count
     FROM views
@@ -32,7 +32,7 @@ export async function getViewsCount(): Promise<
 }
 
 export async function increment(slug: string) {
-	noStore();
+	// noStore();
 	await sql`
     INSERT INTO views (slug, count)
     VALUES (${slug}, 1)
