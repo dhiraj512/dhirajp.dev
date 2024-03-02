@@ -9,6 +9,9 @@ import ScrollToTop from '@/components/scrollToTop'
 import Accordion from '@/components/ui/accordion'
 import { format, parseISO } from 'date-fns'
 import Link from "next/link";
+import { getViewsCount, increment } from "@/app/db/actions";
+import ViewCounter from "@/components/view-counter";
+import { Suspense, cache } from 'react';
 
 export const generateStaticParams = async () => allExperiments.
     filter((experiment) => experiment.isPublished === true).
@@ -75,6 +78,9 @@ function ExperimentDetails({ experiment }: { experiment: Experiment }) {
                                 </Link>
                             ))}
                         </div>
+                        <Suspense fallback={<p className="h-5" />}>
+                            <Views slug={experiment.slug} />
+                        </Suspense>
                     </div>
                 </div>
                 <Accordion content={<Toc />} value='table-of-contents'>
@@ -90,4 +96,13 @@ function ExperimentDetails({ experiment }: { experiment: Experiment }) {
             </article>
         </main>
     )
+}
+
+
+let incrementViews = cache(increment);
+
+async function Views({ slug }: { slug: string }) {
+    let views = await getViewsCount();
+    incrementViews(slug);
+    return <ViewCounter allViews={views} slug={slug} />;
 }
